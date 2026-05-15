@@ -4,7 +4,7 @@
 # T2/T3 学び literal 反映 (doctrine: analogical-recall): pip-audit CI で --disable-pip flag 使用禁止
 
 # Synthetic PMI cockpit data generation (T1/T2/T3 同 stack reuse)
-faker>=25.0,<30.0
+faker>=40.18.0,<41.0
 python-dotenv>=1.0,<2.0
 
 # Test infra
