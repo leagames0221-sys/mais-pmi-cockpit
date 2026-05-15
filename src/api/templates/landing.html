@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+    body { font-family: 'Noto Serif JP', serif; background: #0a0a0a; color: #d4af37; margin: 0; padding: 40px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2.4em; border-bottom: 2px solid #d4af37; padding-bottom: 16px; }
+    .tagline { color: #c9a227; font-size: 1.2em; margin: 16px 0 40px; }
+    .feature { background: #1a1a1a; padding: 24px; margin: 16px 0; border-left: 3px solid #d4af37; }
+    .feature h2 { color: #f3e1a3; margin-top: 0; }
+    form { margin-top: 40px; }
+    button { background: #d4af37; color: #0a0a0a; border: 0; padding: 16px 32px; font-size: 1.1em; font-weight: bold; cursor: pointer; }
+    button:hover { background: #c9a227; }
+    .nav-link { display: inline-block; background: #1a1a1a; color: #d4af37; padding: 12px 24px; margin-left: 16px; text-decoration: none; border: 1px solid #d4af37; }
+    .nav-link:hover { background: #d4af37; color: #0a0a0a; }
+    .footer { margin-top: 60px; color: #6b6b6b; font-size: 0.9em; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MAIS / T4</h1>
+    <p class="tagline">経営の責務を、 次の人へ。 <br>M&A 成約後 Day-1 → Day-100、 Synergy KPI live cockpit を AI が常時 surface。</p>
+
+    <div class="feature">
+      <h2>① Synergy KPI live dashboard (4 dimension)</h2>
+      <p>cost / revenue / cash_gen / working_capital の time-series、 Apache Superset embed で経営層に literal 提示。</p>
+    </div>
+    <div class="feature">
+      <h2>② Driver Insight (Isolation Forest + LLM citation link back)</h2>
+      <p>KPI anomaly 自動検知 → AI が driver 抽出、 source 文書まで literal link back (T2 Citation pattern inherit)。</p>
+    </div>
+    <div class="feature">
+      <h2>③ Next Action 推奨 (5 候補 ranked + 5 audience cascade)</h2>
+      <p>KPI falter 時 LLM listwise rerank で next move を 5 候補 surface、 audience-specific 通知文書 自動生成。</p>
+    </div>
+    <div class="feature">
+      <h2>④ Retention Risk + Sentiment (中堅日本企業 文化 fit 検知)</h2>
+      <p>Slack / Teams / アンケート sentiment、 退職 risk score 0-100、 T3 JPDay1Pattern inherit で組合 / 銀行 / 同族 / 商習慣 軸 trigger。</p>
+    </div>
+    <div class="feature">
+      <h2>⑤ Vendor / SaaS 統合機会 自動抽出 (docling parse + 5-stage hybrid)</h2>
+      <p>vendor 契約書 + SaaS license の overlap detect、 中堅日本企業 vendor 統合 pattern (IT インフラ / 紙系 / 知的サービス cluster)。</p>
+    </div>
+
+    <form action="/generate" method="post" style="display: inline;">
+      <button type="submit">▶ 合成データで 100 日 cockpit 生成 (demo)</button>
+    </form>
+    <a href="/dashboard" class="nav-link">📊 Superset Dashboard view</a>
+
+    <div class="footer">
+      合成データ only / 実 KPI / 実従業員 / 実 vendor 一切扱わない / PoC 版<br>
+       inherit + /301/302/303/304/305/307 accepted
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Week 3 — SentimentEvent + VendorContract overlap + 5-stage hybrid full active + Citation link back
+# Week 0/1 stack 継承
+-r requirements-week1.txt
+
+# 5-stage hybrid pipeline
+# cross-PJ universal template
+# Layer 1 Standard Pin literal 採用、 T2 (mais-dd-workbench) で literal verified ★★★、
+# CVE-2026-1839 (transformers RCE、 CVSS 7.8 HIGH) 不在 verified、 上場会社 受託 deploy ready
+# 2026-05-13 訂正: 旧 「stable 5.0 release 待ち推測 + commented out 妥協 path」 は
+# doctrine: prior-art-first + doctrine: waste-zero + doctrine: analogical-recall 違反 (T2 で literal 解決済 pattern を inherit せず)、
+# user 指摘で literal 訂正
+
+rank-bm25>=0.2.2,<1.0 # Stage 1 BM25 (lightweight、 pure Python、 transformers 不依存)
+sentence-transformers>=5.4,<6.0 # Stage 2 dense + Stage 4 cross-encoder (transformers 5.x 互換、 T2 verified)
+faiss-cpu>=1.8,<2.0 # Stage 2 dense retrieval (MIT、 Meta 公式、 transformers 不依存)
+llama-index-core>=0.14,<1.0 # Citation infra (MIT、 古い CVE 全 fix 済)
+docling>=2.0,<3.0 # Excel/Word/PPT/PDF parser (CVE-2026-24009 fix 込み)
+transformers>=5.0,<6.0 # multilingual sentiment base (CVE-2026-1839 fix 込み、 stable 5.x active)
+torch>=2.0,<3.0 # transformers dependency (CPU only)

@@ -1,0 +1,52 @@
+# Week 1 — schema + ingestion + data gen active phase
+# 6 軸 mitigation 軸 ① pin version literal、 軸 ④ pip-audit CI strict fail-on-high で literal verify
+# T3 学び literal 反映 (doctrine: analogical-recall): pip-audit CI で --disable-pip flag 使用禁止
+
+# Week 0 stack 継承 (scaffold + audit minimal)
+-r requirements-week0.txt
+
+# Core orchestrator
+langgraph>=1.2.0,<2.0
+langgraph-checkpoint>=4.1.0,<5.0
+langchain-core>=1.4.0,<2.0
+
+# Dependency graph (T3 inherit)
+networkx>=3.6,<4.0
+
+# Anomaly detection
+scikit-learn>=1.4,<2.0
+numpy>=1.26,<3.0
+
+# Sentiment 分析
+# transformers + torch は Week 3 で active 化 (cross-PJ python-ml-stack template inherit、 CVE-2026-1839 fix 込み)
+# transformers>=5.0,<6.0 # Standard Pin (T2 起源、 cross-PJ template SSoT)
+# torch>=2.0,<3.0
+
+# KPI snapshot tabular
+pandas>=2.2,<3.0
+
+# 5-stage hybrid + citation (T1/T2/T3 inherit、 Week 2-3 で active 化、 cross-PJ python-ml-stack template inherit)
+# sentence-transformers>=5.4,<6.0 # Standard Pin (transformers 5.x 互換、 T2 起源)
+# faiss-cpu>=1.8,<2.0
+# rank-bm25>=0.2.2,<1.0
+# llama-index-core>=0.14,<1.0
+
+# Vendor 契約 parser (T2 inherit、 Week 3 で active 化)
+# docling>=2.0,<3.0
+
+# Apache Superset embed
+# apache-superset>=6.0,<7.0
+
+# FastAPI UI (T1/T2/T3 inherit、 Week 4 で active 化)
+# fastapi>=0.115,<1.0
+# uvicorn[standard]>=0.30,<1.0
+# jinja2>=3.1,<4.0
+
+# Vault (T1/T2/T3 inherit、 Week 4 で active 化)
+# cryptography>=46.0.6,<47.0
+
+# Anthropic SDK (T1/T2/T3 inherit、 Week 2 LLM call phase で active 化)
+anthropic>=0.100,<1.0
+
+# Retry (T1/T2/T3 inherit)
+tenacity>=9.0,<10.0

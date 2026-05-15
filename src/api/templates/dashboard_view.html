@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Superset Dashboard — {{ cp.cp_id }}</title>
+  <style>
+    body { font-family: 'Noto Sans JP', sans-serif; background: #0a0a0a; color: #f3e1a3; margin: 0; padding: 40px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1, h2 { color: #d4af37; }
+    h1 { border-bottom: 2px solid #d4af37; padding-bottom: 16px; }
+    h2 { margin-top: 40px; border-left: 4px solid #d4af37; padding-left: 12px; }
+    .meta { background: #1a1a1a; padding: 16px; margin: 16px 0; }
+    .embed-placeholder { background: #1a1a1a; border: 2px dashed #d4af37; padding: 40px; text-align: center; min-height: 480px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .embed-placeholder h3 { color: #d4af37; margin: 0 0 16px; }
+    .embed-placeholder p { color: #c9a227; max-width: 700px; line-height: 1.6; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 24px 0; }
+    .kpi-card { background: #1a1a1a; padding: 20px; border-left: 4px solid #d4af37; }
+    .kpi-card h3 { color: #f3e1a3; margin: 0 0 8px; font-size: 1em; }
+    .kpi-card .value { color: #d4af37; font-size: 2.2em; font-weight: bold; }
+    .kpi-card .label { color: #6b6b6b; font-size: 0.85em; margin-top: 8px; }
+    .deploy-note { background: #2c2c2c; padding: 20px; border-left: 4px solid #ff6b6b; margin: 24px 0; }
+    .deploy-note strong { color: #ff6b6b; }
+    a { color: #d4af37; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Superset Dashboard — KPI live view</h1>
+    <div class="meta">
+      <strong>CP-id</strong>: {{ cp.cp_id }} |
+      <strong>industry</strong>: {{ cp.industry }} |
+      <strong>Day-1</strong>: {{ cp.day1_anchor_date }} → <strong>Day-100</strong>: {{ cp.day100_end_date }}
+    </div>
+
+    <h2>4 dimension KPI summary</h2>
+    <div class="kpi-grid">
+      {% for kp in kpi_definitions %}
+      <div class="kpi-card">
+        <h3>{{ kp.dimension }} — {{ kp.kpi_name_jp }}</h3>
+        <div class="value">{{ kp.target_value_day100 }} {{ kp.unit }}</div>
+        <div class="label">target Day-100 / kp_id: {{ kp.kp_id }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <h2>Superset embed (iframe placeholder)</h2>
+    <div class="embed-placeholder">
+      <h3>📊 Apache Superset 6.0 embed slot</h3>
+      <p>
+        PoC = mock placeholder。 移植時 = SUPERSET_GUEST_TOKEN 経由で literal embed。
+        <br><br>
+        time-series chart: {{ kpi_snapshots_count }} snapshot × 4 KPI dim<br>
+        anomaly overlay: {{ driver_insights_count }} DriverInsight 件<br>
+        NextAction trigger: {{ next_actions_count }} 候補
+      </p>
+    </div>
+
+    <div class="deploy-note">
+      <strong>🚧 受託 deploy 前 ★★★ 化 残 task (cross-PJ template § 「🚀 正式アシスタントス」 順守)</strong>:
+      <ul>
+        <li>Apache Superset 6.0 server install + JWT auth wiring (現状 placeholder iframe)</li>
+        <li>Layer 5 dep-review.yml GHAS 有効化 (PRIVATE repo + default plan では非機能)</li>
+        <li>1 週間 stability dry-run + 顧客 sandbox + 大型案件 external pentesting</li>
+        <li>合成データ → 実 KPI 移行時 doctrine: sandbox-check 再評価 (Docker / WSL2 / Codespaces 必須判断)</li>
+      </ul>
+    </div>
+
+    <p style="margin-top: 40px;"><a href="/">← 戻る</a> | <a href="/generate">🔄 generate 戻る</a> | <a href="/api/generate">JSON API output</a></p>
+  </div>
+</body>
+</html>

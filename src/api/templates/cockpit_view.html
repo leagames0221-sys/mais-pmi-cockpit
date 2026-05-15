@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>100-Day PMI Cockpit — {{ cp.cp_id }}</title>
+  <style>
+    body { font-family: 'Noto Sans JP', sans-serif; background: #0a0a0a; color: #f3e1a3; margin: 0; padding: 40px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1, h2 { color: #d4af37; }
+    h1 { border-bottom: 2px solid #d4af37; padding-bottom: 16px; }
+    h2 { margin-top: 40px; border-left: 4px solid #d4af37; padding-left: 12px; }
+    .meta { background: #1a1a1a; padding: 16px; margin: 16px 0; }
+    table { width: 100%; border-collapse: collapse; background: #1a1a1a; margin: 16px 0; font-size: 0.92em; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #2c2c2c; }
+    th { background: #2c2c2c; color: #d4af37; }
+    tr:hover { background: #1f1f1f; }
+    .dim-cost { color: #d4af37; }
+    .dim-revenue { color: #c9a227; }
+    .dim-cash_gen { color: #f3e1a3; }
+    .dim-working_capital { color: #8b7414; }
+    .severity-high { color: #ff6b6b; font-weight: bold; }
+    .severity-medium { color: #f3e1a3; }
+    .severity-low { color: #6b6b6b; }
+    .nav-link { display: inline-block; background: #1a1a1a; color: #d4af37; padding: 8px 16px; margin-right: 12px; text-decoration: none; border: 1px solid #d4af37; }
+    .nav-link:hover { background: #d4af37; color: #0a0a0a; }
+    a { color: #d4af37; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 100-Day PMI Cockpit</h1>
+    <div class="meta">
+      <strong>CP-id</strong>: {{ cp.cp_id }} |
+      <strong>source T3 IP-id</strong>: {{ cp.source_t3_ip_id }} |
+      <strong>industry</strong>: {{ cp.industry }} |
+      <strong>size</strong>: {{ cp.size_band }}
+      <br>
+      <strong>Day-1</strong>: {{ cp.day1_anchor_date }} →
+      <strong>Day-100</strong>: {{ cp.day100_end_date }} |
+      <strong>status</strong>: {{ cp.status }}
+    </div>
+
+    <h2>① Synergy KPI Definition ({{ kpi_definitions|length }} 件、 4 dimension)</h2>
+    <table>
+      <thead><tr><th>kp_id</th><th>dim</th><th>name</th><th>unit</th><th>target Day-100</th></tr></thead>
+      <tbody>
+        {% for kp in kpi_definitions %}
+        <tr>
+          <td>{{ kp.kp_id }}</td>
+          <td class="dim-{{ kp.dimension }}">{{ kp.dimension }}</td>
+          <td>{{ kp.kpi_name_jp }}</td>
+          <td>{{ kp.unit }}</td>
+          <td>{{ kp.target_value_day100 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>② KpiSnapshot time-series ({{ kpi_snapshots|length }} 件、 100 日 daily)</h2>
+    <div class="meta">
+      100 日 × 4 KPI = {{ kpi_snapshots|length }} snapshot 生成。 Apache Superset で literal time-series chart 化。
+      <a href="/dashboard" class="nav-link" style="margin-left: 16px;">📊 Dashboard view →</a>
+    </div>
+
+    <h2>③ DriverInsight ({{ driver_insights|length }} 件、 KPI anomaly root cause + citation link back)</h2>
+    {% if driver_insights %}
+    <table>
+      <thead><tr><th>dr_id</th><th>kp_id</th><th>severity</th><th>driver factors</th><th>citations</th></tr></thead>
+      <tbody>
+        {% for dr in driver_insights %}
+        <tr>
+          <td>{{ dr.dr_id }}</td>
+          <td>{{ dr.kp_id }}</td>
+          <td class="severity-{{ dr.severity }}">{{ dr.severity }}</td>
+          <td>{{ dr.driver_factors|join(', ') }}</td>
+          <td>{{ dr.citation_array|join(', ') if dr.citation_array else '(none)' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="meta">DriverInsight = orchestrator full DAG 経由で生成 (anomaly detect → LLM 5-stage hybrid)、 demo data path では空。</div>
+    {% endif %}
+
+    <h2>④ NextAction 推奨 ({{ next_actions|length }} 件、 5 候補 ranked + audience mapping)</h2>
+    {% if next_actions %}
+    <table>
+      <thead><tr><th>na_id</th><th>trigger</th><th>priority</th><th>recommended action</th><th>audience</th></tr></thead>
+      <tbody>
+        {% for na in next_actions %}
+        <tr>
+          <td>{{ na.na_id }}</td>
+          <td>{{ na.trigger_dr_id }}</td>
+          <td><strong>{{ na.priority_rank }}</strong></td>
+          <td>{{ na.recommended_action_redacted }}</td>
+          <td>{{ na.audience_mapping|join(', ') if na.audience_mapping else '(none)' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="meta">NextAction = orchestrator next_action_node (Claude listwise rerank) 経由で生成、 demo data path では空。</div>
+    {% endif %}
+
+    <h2>⑤ SentimentEvent ({{ sentiment_events|length }} 件、 Slack/Teams/アンケート)</h2>
+    {% if sentiment_events %}
+    <table>
+      <thead><tr><th>se_id</th><th>channel</th><th>sentiment</th><th>topic_tags</th><th>excerpt (redacted)</th></tr></thead>
+      <tbody>
+        {% for se in sentiment_events %}
+        <tr>
+          <td>{{ se.se_id }}</td>
+          <td>{{ se.channel }}</td>
+          <td class="severity-{{ 'high' if se.sentiment_score < -0.3 else ('low' if se.sentiment_score > 0.3 else 'medium') }}">{{ "%.2f"|format(se.sentiment_score) }}</td>
+          <td>{{ se.topic_tags|join(', ') }}</td>
+          <td>{{ se.excerpt_redacted }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="meta">SentimentEvent = orchestrator sentiment_node (HF Transformers + Claude) 経由、 demo data path では空。</div>
+    {% endif %}
+
+    <h2>🚨 RetentionRisk ({{ retention_risks|length }} 件、 T3 JPDay1Pattern hit trigger)</h2>
+    <table>
+      <thead><tr><th>rt_id</th><th>trigger axis</th><th>risk score</th><th>summary (redacted)</th><th>mitigation</th></tr></thead>
+      <tbody>
+        {% for rt in retention_risks %}
+        <tr>
+          <td>{{ rt.rt_id }}</td>
+          <td>{{ rt.trigger_jp_axis }}</td>
+          <td><strong>{{ rt.risk_score }}</strong></td>
+          <td>{{ rt.summary_redacted }}</td>
+          <td>{{ rt.mitigation_recommendation_redacted }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>⑤ VendorContract / SaasLicense 統合機会 ({{ vendor_contracts|length }} + {{ saas_licenses|length }} 件)</h2>
+    <table>
+      <thead><tr><th>vc_id</th><th>vendor name</th><th>industry</th><th>annual cost</th><th>contract type</th></tr></thead>
+      <tbody>
+        {% for vc in vendor_contracts %}
+        <tr>
+          <td>{{ vc.vc_id }}</td>
+          <td>{{ vc.vendor_name_redacted }}</td>
+          <td>{{ vc.industry_cluster }}</td>
+          <td>{{ vc.annual_cost_jpy }} 円</td>
+          <td>{{ vc.contract_type }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if saas_licenses %}
+    <table>
+      <thead><tr><th>sl_id</th><th>SaaS name</th><th>seats</th><th>usage_pct</th><th>annual cost</th></tr></thead>
+      <tbody>
+        {% for sl in saas_licenses %}
+        <tr>
+          <td>{{ sl.sl_id }}</td>
+          <td>{{ sl.saas_name }}</td>
+          <td>{{ sl.seat_count }}</td>
+          <td>{{ "%.1f"|format(sl.usage_pct * 100) }}%</td>
+          <td>{{ sl.annual_cost_jpy }} 円</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    <p style="margin-top: 40px;"><a href="/">← 戻る</a> | <a href="/api/generate">JSON API output</a> | <a href="/dashboard">📊 Superset dashboard</a></p>
+  </div>
+</body>
+</html>
