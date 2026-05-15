@@ -1,0 +1,64 @@
+name: pip-audit
+
+# T2 学び literal 反映 (doctrine: analogical-recall、 T2 commit 76eb283):
+# pip-audit に --disable-pip flag は use しない (hashed requirements 必須 or --no-deps 必須エラー)。
+# 本 file で flag 不在 を literal 維持、 T1-T5 sibling 共通 pattern。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "requirements*.txt"
+      - ".github/workflows/pip-audit.yml"
+  pull_request:
+    paths:
+      - "requirements*.txt"
+      - ".github/workflows/pip-audit.yml"
+  schedule:
+    - cron: "0 0 * * 1"  # weekly Monday 09:00 JST (00:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  audit-week0:
+    runs-on: ubuntu-latest
+    name: audit requirements-week0 (active stack, fail-on-high)
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install pip-audit
+        run: pip install pip-audit
+      - name: Audit Week 0 active stack
+        run: pip-audit -r requirements-week0.txt --strict
+
+  audit-week1:
+    runs-on: ubuntu-latest
+    name: audit requirements-week1 (active stack, fail-on-high, ADR-301 軸 ④)
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install pip-audit
+        run: pip install pip-audit
+      - name: Audit Week 1 active stack
+        # ADR-301 6 軸 mitigation 軸 ① pin version (langgraph >=1.2.0 + langgraph-checkpoint >=4.1.0
+        # + langchain-core >=1.4.0 + sklearn >=1.4 + pandas >=2.2) + 軸 ④ pip-audit CI strict
+        # fail-on-high で新 CVE literal block (T3 ADR-201 同 pattern inherit)
+        run: pip-audit -r requirements-week1.txt --strict
+
+  audit-week3:
+    runs-on: ubuntu-latest
+    name: audit requirements-week3 (active stack, fail-on-high, ADR-305 sentiment + vendor + 5-stage active)
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install pip-audit
+        run: pip install pip-audit
+      - name: Audit Week 3 active stack
+        # ADR-301 6 軸 mitigation: transformers / torch / docling / sentence-transformers /
+        # faiss-cpu / rank-bm25 / llama-index-core literal pin + strict fail-on-high
+        run: pip-audit -r requirements-week3.txt --strict

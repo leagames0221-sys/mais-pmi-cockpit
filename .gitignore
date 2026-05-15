@@ -1,0 +1,85 @@
+# Security Master Layer 1 — credentials + secrets literal block
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+.credentials
+
+# Synthetic PMI cockpit data (large + repo 外保管)
+data/cockpit_synthetic/**/*.json
+data/cockpit_synthetic/**/*.jsonl
+data/cockpit_synthetic/**/*.parquet
+data/cockpit_synthetic/**/*.csv
+data/kpi_snapshots/**/*.json
+data/kpi_snapshots/**/*.jsonl
+data/cache/
+data/audit/*.jsonl
+data/vault/*.enc
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Model cache (HF / sentence-transformers / docling / sklearn)
+.cache/
+~/.cache/huggingface/
+*.safetensors
+*.bin
+*.pth
+*.joblib
+
+# LangGraph checkpoint state (Week 2+ active 化、 local persist のみ)
+.langgraph_checkpoint/
+*.langgraph_state
+
+# Apache Superset embed cache + local SQLite (Week 4 active)
+superset_home/
+superset.db
+*.superset.cache
+
+# Video pipeline output
+out_video/
+*.mp4
+*.webm
+*.wav
+*.srt
+
+# Third-party engine binaries (literal 大容量 + per-host install、 T2 .vendor/ literal 共有)
+# 例: .vendor/aivis-engine/ = AivisSpeech-Engine 1.2.0 standalone (~216MB)
+.vendor/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Security Master telemetry (T2 学び literal 反映: heartbeat path は実環境で .claude/.*.heartbeat 形式)
+.security_telemetry.jsonl
+.security_heartbeat.json
+.security_heartbeat.jsonl
+.claude/.git_secret_scan.heartbeat
+.claude/.security_intercept.heartbeat
+.claude/*.heartbeat
+.claude/*.jsonl
