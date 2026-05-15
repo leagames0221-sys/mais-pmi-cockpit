@@ -4,7 +4,7 @@ aiosqlite==0.22.1
 annotated-doc==0.0.4
 annotated-types==0.7.0
 anthropic==0.101.0
-antlr4-python3-runtime==4.9.3
+antlr4-python3-runtime==4.13.2
 anyio==4.13.0
 attrs==26.1.0
 beautifulsoup4==4.14.3
