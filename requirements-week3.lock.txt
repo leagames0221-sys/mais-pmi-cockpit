@@ -15,7 +15,7 @@ boolean.py==5.0
 CacheControl==0.14.4
 certifi==2026.4.22
 charset-normalizer==3.4.7
-click==8.3.3
+click==8.4.0
 colorama==0.4.6
 colorlog==6.10.1
 coverage==7.14.0
