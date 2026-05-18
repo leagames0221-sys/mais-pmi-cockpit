@@ -15,7 +15,7 @@ networkx>=3.6,<4.0
 
 # Anomaly detection
 scikit-learn>=1.4,<2.0
-numpy>=1.26,<3.0
+numpy>=2.4.5,<3.0
 
 # Sentiment 分析
 # transformers + torch は Week 3 で active 化 (cross-PJ python-ml-stack template inherit、 CVE-2026-1839 fix 込み)
