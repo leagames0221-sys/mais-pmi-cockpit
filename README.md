@@ -14,11 +14,11 @@
 The 100 days after deal close are where most M&A value is won or lost. Standard PMI dashboards show the KPI; they don't tell the operating partner what to do next week.
 
 **MAIS PMI Cockpit** closes that loop:
-- Synergy KPIs (cost / revenue / cash-gen / working capital + JP mid-market specific) on Apache Superset
-- Isolation Forest + AnomSeer-pattern anomaly detection
-- LLM rewrites anomalies into ranked next-actions with audience mapping ("what to do, who to tell, by when")
-- Sentiment from Slack / Teams / engagement surveys (multilingual)
-- Vendor / SaaS overlap detection (Docling parses contracts, 5-stage hybrid finds duplicates)
+- Synergy KPIs (cost / revenue / cash-gen / working capital + JP mid-market specific) on Apache Superset *(embed wrapper = placeholder; live JWT wiring is a 1-file swap path, see [PoC status](#poc-status-what-is-live-vs-deferred))*
+- Isolation Forest + AnomSeer-pattern anomaly detection *(active)*
+- LLM rewrites anomalies into ranked next-actions with audience mapping ("what to do, who to tell, by when") *(MockProvider in PoC; Claude/Gemini swap is a 1-file change)*
+- Sentiment from Slack / Teams / engagement surveys (multilingual) *(token-heuristic mock active; HF Transformers + Slack/Teams connector active in Week 4)*
+- Vendor / SaaS overlap detection (Docling parses contracts, 5-stage hybrid finds duplicates) *(active)*
 
 ---
 
@@ -82,36 +82,37 @@ The 100 days after deal close are where most M&A value is won or lost. Standard 
 
 ## What's inside
 
-| Capability | Implementation |
-|---|---|
-| **Synergy KPI live dashboard** | Apache Superset 6.0+ embed + custom CSS wrapper for slate-and-amber brand |
-| **Anomaly detection** | scikit-learn Isolation Forest + [AnomSeer 2026 pattern](https://openreview.net/forum?id=Jl0QHFcyCl) (MLLM grounding reasoning reinforcement) |
-| **LLM next-action** | LLMProvider Protocol + Claude listwise Chain-of-Thought — 5 ranked actions + audience mapping |
-| **Driver insight** | 5-stage hybrid retrieval surfaces "KPI driver factor → cash-gen improvement hypothesis" with source citations |
-| **Sentiment analysis** | HuggingFace Transformers (multilingual sentiment base) + Claude API for multi-axis interpretation |
-| **Vendor / SaaS overlap** | Docling parses contracts; 5-stage hybrid + JP mid-market vendor consolidation pattern detector |
-| **Vault Pattern** | Contact information (employee + vendor) Fernet-encrypted at rest |
+| Capability | Implementation | PoC status |
+|---|---|---|
+| **Synergy KPI live dashboard** | Apache Superset 6.0+ embed + custom CSS wrapper for slate-and-amber brand | ⏳ embed wrapper placeholder (`about:blank` URL); JWT swap is 1-file (`src/dashboard/superset_embed.py`) |
+| **Anomaly detection** | scikit-learn Isolation Forest + [AnomSeer 2026 pattern](https://openreview.net/forum?id=Jl0QHFcyCl) (MLLM grounding reasoning reinforcement) | ✅ active |
+| **LLM next-action** | LLMProvider Protocol + Claude listwise Chain-of-Thought — 5 ranked actions + audience mapping | ⏳ MockProvider active (deterministic, no API key); Claude swap is 1-file (`src/llm/provider.py`) |
+| **Driver insight** | 5-stage hybrid retrieval surfaces "KPI driver factor → cash-gen improvement hypothesis" with source citations | ✅ active (Week 3+ stack) |
+| **Sentiment analysis** | HuggingFace Transformers (multilingual sentiment base) + Claude API for multi-axis interpretation | ⏳ token-heuristic mock active; transformers + LLM swap deferred to Week 4 (`src/sentiment/analyze_message.py`) |
+| **Vendor / SaaS overlap** | Docling parses contracts; 5-stage hybrid + JP mid-market vendor consolidation pattern detector | ✅ active |
+| **Vault Pattern** | Contact information (employee + vendor) Fernet-encrypted at rest | ✅ active |
 
 ---
 
 ## Tech stack
 
-| Layer | Choice |
-|---|---|
-| Dashboard | Apache Superset 6.0+ (Apache-2.0) — embedded SDK |
-| Anomaly | scikit-learn ≥ 1.4 (BSD-3) Isolation Forest |
-| Sentiment | transformers ≥ 4.40 (Apache-2.0) multilingual |
-| Orchestrator | LangGraph ≥ 1.2.0 (MIT) — CVE-2026-28277 fixed |
-| Graph | NetworkX ≥ 3.x (BSD-3) |
-| Citation infra | LlamaIndex core (MIT) |
-| Retrieval | rank-bm25 + multilingual-e5-large + cross-encoder/ms-marco-MiniLM-L-12-v2 |
-| ANN | faiss-cpu (MIT) |
-| Document parsing | docling (MIT) — for vendor contracts |
-| Tabular | pandas ≥ 2.2 (BSD-3) |
-| Web | FastAPI + uvicorn + Jinja2 (MIT) |
-| Schema | Pydantic v2 (MIT) |
-| Crypto | cryptography Fernet (Apache-2.0) |
-| Tests | pytest (96 collected) |
+| Layer | Choice | PoC wiring |
+|---|---|---|
+| Dashboard | Apache Superset 6.0+ (Apache-2.0) — embedded SDK | ⏳ placeholder URL; JWT embed path defined in `superset_embed.py` |
+| Anomaly | scikit-learn ≥ 1.4 (BSD-3) Isolation Forest | ✅ live |
+| Sentiment | transformers ≥ 4.40 (Apache-2.0) multilingual | ⏳ optional import; mock heuristic is default until Week 4 |
+| Orchestrator | LangGraph ≥ 1.2.0 (MIT) — CVE-2026-28277 fixed | ✅ live |
+| Graph | NetworkX ≥ 3.x (BSD-3) | ✅ live |
+| Citation infra | LlamaIndex core (MIT) | ✅ live |
+| Retrieval | rank-bm25 + multilingual-e5-large + cross-encoder/ms-marco-MiniLM-L-12-v2 | ✅ live (Week 3 stack) |
+| ANN | faiss-cpu (MIT) | ✅ live |
+| Document parsing | docling (MIT) — for vendor contracts | ✅ live |
+| Tabular | pandas ≥ 2.2 (BSD-3) | ✅ live |
+| Web | FastAPI + uvicorn + Jinja2 (MIT) | ✅ live |
+| Schema | Pydantic v2 (MIT) | ✅ live |
+| LLM SDK | anthropic ≥ 0.100 (MIT) | ⏳ declared in `requirements-week1.txt`; not yet imported by code (MockProvider active) |
+| Crypto | cryptography Fernet (Apache-2.0) | ✅ live |
+| Tests | pytest (96 collected) | ✅ live |
 
 ---
 
@@ -156,6 +157,28 @@ SESSION_SECRET=<token_urlsafe>          # FastAPI session
 SYNTHETIC_SEED=20260513
 DATA_DIR=./data
 ```
+
+---
+
+## PoC status — what is live vs deferred
+
+This is a **PoC portfolio** demonstrating shape + interfaces. The architecture above is the target design. Current implementation status:
+
+**✅ Live in PoC** (active code paths, deterministic, no external API needed):
+- KPI snapshot ingestion + Isolation Forest anomaly detection
+- 5-stage hybrid retrieval (BM25 + dense + cross-encoder rerank) for driver insight
+- Vendor / SaaS overlap detection (Docling + JP mid-market patterns)
+- Token-heuristic sentiment + topic tagging
+- Fernet vault for contact information
+- 96 pytest cases passing
+
+**⏳ Deferred to integration phase** (1-file swap paths defined, contracts stable):
+- LLM next-action — `MockProvider` returns deterministic templated outputs; `src/llm/provider.py` ships the `LLMProvider` Protocol with a single `default_provider()` swap point. `anthropic>=0.100` is pinned in `requirements-week1.txt` but no code imports it yet.
+- Apache Superset embed — `src/dashboard/superset_embed.py` returns `about:blank#superset-embed-placeholder` until `SUPERSET_GUEST_TOKEN` is provided; the iframe URL builder + JWT spec is literal.
+- HF Transformers multilingual sentiment — optional import; activated in Week 4 lock file (`requirements-week3.lock.txt` already pins `transformers==5.8.1` + `sentence-transformers==5.5.0`).
+- Slack / Teams connectors — mocked; Week 4 Bot Framework / Slack API integration path defined.
+
+**Rationale**: this scoping lets the repo demonstrate end-to-end shape + tests on a laptop without paid API keys. The 1-file swap pattern (Protocol abstraction) is itself the portfolio claim — adding real Claude / Superset / transformers does not require refactoring callers.
 
 ---
 
