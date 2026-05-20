@@ -20,8 +20,6 @@ The 100 days after deal close are where most M&A value is won or lost. Standard 
 - Sentiment from Slack / Teams / engagement surveys (multilingual)
 - Vendor / SaaS overlap detection (Docling parses contracts, 5-stage hybrid finds duplicates)
 
-Industry benchmark: post-deal AI adoption rose **18% (2024) → 27% (2026)** (top-tier PMI advisory research).
-
 ---
 
 ## Architecture
