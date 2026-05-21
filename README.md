@@ -110,7 +110,9 @@ The 100 days after deal close are where most M&A value is won or lost. Standard 
 | Tabular | pandas ≥ 2.2 (BSD-3) | ✅ live |
 | Web | FastAPI + uvicorn + Jinja2 (MIT) | ✅ live |
 | Schema | Pydantic v2 (MIT) | ✅ live |
-| LLM SDK | anthropic ≥ 0.100 (MIT) | ⏳ declared in `requirements-week1.txt`; not yet imported by code (MockProvider active) |
+| LLM (PoC) | MockProvider (deterministic templated) | ✅ active — zero cost, zero key, runs offline |
+| LLM (local swap) | Ollama (e.g. qwen2.5:7b) — env-gated via `LLM_PROVIDER=ollama` | ⏳ swap path defined; still zero cost, still no credit card |
+| LLM (production swap) | anthropic ≥ 0.100 (MIT) — env-gated via `LLM_PROVIDER=claude` | ⏳ declared in `requirements-week1.txt`; only place a paid API key enters the system |
 | Crypto | cryptography Fernet (Apache-2.0) | ✅ live |
 | Tests | pytest (96 collected) | ✅ live |
 
@@ -150,13 +152,43 @@ uvicorn src.api.app:app --reload --port 8000
 
 ## Configuration (env)
 
+The cockpit ships with a **3-tier LLM swap path**. Pick the tier that matches your environment — no env edits are needed for tier 1 (PoC default).
+
+### Tier 1 — PoC default (zero cost, zero credit card, runs offline)
+
 ```bash
-ANTHROPIC_API_KEY=sk-ant-...           # required for LLM next-action
-VAULT_KEY=<fernet key>                  # contact info vault
-SESSION_SECRET=<token_urlsafe>          # FastAPI session
+# No LLM env vars required. MockProvider is the default; outputs are deterministic
+# templated next-actions so the full UI + Isolation Forest + Superset placeholder
+# all work without any external API call.
+VAULT_KEY=<fernet key>                  # contact info vault (always required)
+SESSION_SECRET=<token_urlsafe>          # FastAPI session (always required)
 SYNTHETIC_SEED=20260513
 DATA_DIR=./data
 ```
+
+### Tier 2 — Local LLM swap (still zero cost, zero credit card; uses your own GPU/CPU)
+
+For developers / customers who want real LLM next-actions without paid APIs. Requires [Ollama](https://ollama.com/) running locally with a model pulled (e.g. `ollama pull qwen2.5:7b`).
+
+```bash
+LLM_PROVIDER=ollama                     # switches default_provider() to Ollama (1-file swap point: src/llm/provider.py)
+OLLAMA_BASE_URL=http://localhost:11434  # Ollama default
+OLLAMA_MODEL=qwen2.5:7b                 # any local model the cockpit prompt format supports
+# ... plus the always-required vars from tier 1
+```
+
+### Tier 3 — Customer / production swap (paid API; the only tier that touches credit-card-backed services)
+
+For customer deployments where multi-tenant scale or hosted-model SLA is required. **This is the only place credit-card-backed services enter the system** — paste the customer's key here and nothing else changes.
+
+```bash
+LLM_PROVIDER=claude                     # or "gemini" / future provider
+ANTHROPIC_API_KEY=sk-ant-...            # paste customer's key here (PoC + tier 2 never read this var)
+ANTHROPIC_MODEL=claude-sonnet-4-6       # whichever model the engagement contract specifies
+# ... plus the always-required vars from tier 1
+```
+
+The swap point is literally one function — `default_provider()` in `src/llm/provider.py` (currently raises `NotImplementedError` for non-mock until tier 2/3 providers land per the Week 2+ phase plan). Callers (`src/anomaly/`, `src/next_action/`, etc.) never import a specific SDK — they import the `LLMProvider` Protocol, so wiring real Claude or Ollama is one file changed, zero refactor.
 
 ---
 
