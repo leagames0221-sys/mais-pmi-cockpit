@@ -26,6 +26,18 @@ This repo specifically demonstrates: 100-day PMI cockpit with Fernet-vaulted con
 
 ---
 
+## 🎬 Demo walkthrough (2-minute narrated video)
+
+End-to-end demo of the cockpit — landing → 5 feature panels (Synergy KPI / Driver Insight / Next Action / Retention Risk / Vendor Overlap) → POST /generate → cockpit_view scrolls through CockpitProject meta, KPI 4-dim, KpiSnapshot time-series, NextAction recommendations, RetentionRisk + Sentiment, VendorContract / SaasLicense overlap → dashboard view. Japanese narration by [AivisSpeech](https://aivis-project.com/) (まお おちついた, Style-Bert-VITS2), 1920×1080 H.264.
+
+> [▶️ **mais_pmi_cockpit_demo.mp4**](out_video/mais_pmi_cockpit_demo.mp4) — 119.10 s · 8.8 MB · 16 scenes with burned-in SRT subtitles.
+
+<video src="out_video/mais_pmi_cockpit_demo.mp4" controls width="100%"></video>
+
+**Reproducible pipeline** ([scripts/produce_video.py](scripts/produce_video.py), [requirements-video.txt](requirements-video.txt)) — action-then-narration timing model: each scene measures Playwright action elapsed time then plays narration on the settled destination page, so audio and video stay synchronized even when retrieval / DB operations take variable wall-clock. All synthetic data, zero real PII, zero paid API.
+
+---
+
 ## 30-second pitch
 
 The 100 days after deal close are where most M&A value is won or lost. Standard PMI dashboards show the KPI; they don't tell the operating partner what to do next week.

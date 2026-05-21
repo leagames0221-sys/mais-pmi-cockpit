@@ -62,6 +62,10 @@ out_video/
 *.webm
 *.wav
 *.srt
+# 例外: ship する demo MP4 のみ track (build artifact、 review evidence)
+!out_video/
+!out_video/mais_pmi_cockpit_demo.mp4
+out_video/_temp/
 
 # Third-party engine binaries (literal 大容量 + per-host install、 T2 .vendor/ literal 共有)
 # 例: .vendor/aivis-engine/ = TTS engine-Engine 1.2.0 standalone (~216MB)
