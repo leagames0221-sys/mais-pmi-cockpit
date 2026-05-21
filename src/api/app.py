@@ -43,7 +43,7 @@ async def landing(request: Request) -> Any:
 
 @app.get("/health")
 async def health() -> dict[str, str]:
-    return {"status": "ok", "service": "mais-t4-pmi-cockpit", "version": "0.4.0"}
+    return {"status": "ok", "service": "mais-pmi-cockpit", "version": "0.4.0"}
 
 
 @app.post("/generate", response_class=HTMLResponse)
