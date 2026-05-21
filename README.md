@@ -278,6 +278,20 @@ Three things turned out to be worth defending in this PoC.
 
 ---
 
+## Design history (ADR set)
+
+Architecture decisions for this repo are recorded under [`docs/adr/`](docs/adr/) using the Nygard pattern (Context / Decision / Alternatives considered / Consequences / References). The five load-bearing decisions are:
+
+- [ADR-0001 — Stack choice (Python 3.11+ + FastAPI + LangGraph + Pydantic v2)](docs/adr/0001-stack-choice.md)
+- [ADR-0002 — LLMProvider Protocol 3-tier swap (Mock / Ollama-local / paid API)](docs/adr/0002-llm-provider-protocol-3tier-swap.md)
+- [ADR-0003 — Anomaly detection: Isolation Forest + AnomSeer 2026 pattern](docs/adr/0003-anomaly-detection.md)
+- [ADR-0004 — Dashboard: Apache Superset embedded SDK (vs Power BI / Tableau / Metabase)](docs/adr/0004-superset-embed.md)
+- [ADR-0005 — Driver-insight + vendor-overlap five-stage hybrid retrieval](docs/adr/0005-five-stage-hybrid-retrieval.md)
+
+Each ADR records the alternatives considered (with pros / cons) and the consequences (positive + negative + reversibility), so the design path is replayable end-to-end.
+
+---
+
 ## Sibling tools (M&A Intelligence Suite)
 
 - [mais-deal-matching](https://github.com/leagames0221-sys/mais-deal-matching) — sourcing
