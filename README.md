@@ -51,6 +51,19 @@ The 100 days after deal close are where most M&A value is won or lost. Standard 
 
 ---
 
+## Why this is distinct (existing alternatives + delta)
+
+Standard 100-day PMI tooling splits into two camps in 2026, and neither closes the "what next" loop the operating partner actually owns:
+
+- **BI-style KPI dashboards** (Power BI / Tableau / Looker) display synergy KPIs as charts but stop at visualization — they require a human consultant to read the chart and decide the action.
+- **M&A integration platforms** (Devensoft / Midaxo / DealRoom) track integration workstreams + RACI but treat KPIs as static fields, not as anomaly signals feeding next-action recommendations.
+
+MAIS PMI Cockpit closes the loop: Isolation Forest + AnomSeer-pattern anomaly detection on the synergy KPIs, then an LLM rewrites anomalies into ranked next-actions with audience mapping (what to do, who to tell, by when).
+
+**Target user**: PE operating partners + post-merger integration consultants who own the 100-day integration plan and need actionable next-week guidance, not just KPI visualization.
+
+---
+
 ## Architecture
 
 ```
@@ -240,6 +253,18 @@ This is a **PoC portfolio** demonstrating shape + interfaces. The architecture a
 - Slack / Teams connectors — mocked; Week 4 Bot Framework / Slack API integration path defined.
 
 **Rationale**: this scoping lets the repo demonstrate end-to-end shape + tests on a laptop without paid API keys. The 1-file swap pattern (Protocol abstraction) is itself the portfolio claim — adding real Claude / Superset / transformers does not require refactoring callers.
+
+---
+
+## What this exercise validated
+
+Three things turned out to be worth defending in this PoC.
+
+**First, the 1-file LLM swap pattern is the portfolio claim, not the LLM choice itself.** The cockpit ships with three concrete swap tiers (MockProvider for offline PoC, Ollama for local-LLM zero-CC, Claude / Gemini for customer production) and a single `default_provider()` function in `src/llm/provider.py` carries all three. Callers under `src/anomaly/` and `src/next_action/` never import a specific SDK — they import the `LLMProvider` Protocol, so wiring a real provider is one file changed, zero refactor across the rest of the codebase. This is the architectural commitment behind the "customer paid API plugs in here" claim in Tier 3 of the Configuration section.
+
+**Second, the cockpit is shaped by the PMI consultant's workflow, not by tooling availability.** The Architecture diagram traces synergy KPI ingestion through anomaly detection → driver insight → ranked next-action with audience mapping. Each output entity carries an ID prefix (`CP-` / `KP-` / `KS-` / `DR-` / `NA-` / `RT-`) that mirrors the consultant's report structure, so a senior PMI partner can read the cockpit top-down without learning a new vocabulary. The Apache Superset embed is the visualization layer the customer typically already has; swapping to a different dashboard tool is documented as a placeholder URL → JWT swap path.
+
+**Third, the PoC stops where the maintained alternatives start.** Power BI / Tableau / Looker remain the right call for static KPI visualization. Devensoft / Midaxo / DealRoom remain the right call for integration-workstream management. What MAIS PMI Cockpit adds is the anomaly-detection-to-action loop on top of synergy KPIs — wired and tested at 96 pytest cases against synthetic PMI data, runnable on a consumer laptop with zero monthly cost. The PoC status section above is explicit about which integration points (Superset embed, Claude swap, HF Transformers sentiment) are live versus deferred.
 
 ---
 
