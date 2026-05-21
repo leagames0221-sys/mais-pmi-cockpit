@@ -19,7 +19,7 @@ from src.data_gen.generate_synthetic_cockpit import generate_synthetic_cockpit
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
-app = FastAPI(title="MAIS / T4 100-Day PMI Cockpit")
+app = FastAPI(title="MAIS PMI Cockpit")
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 
@@ -37,7 +37,7 @@ async def landing(request: Request) -> Any:
     return TEMPLATES.TemplateResponse(
         request=request,
         name="landing.html",
-        context={"title": "MAIS / T4 100-Day PMI Cockpit"},
+        context={"title": "MAIS PMI Cockpit"},
     )
 
 
