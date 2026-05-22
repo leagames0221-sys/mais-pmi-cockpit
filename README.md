@@ -181,7 +181,11 @@ MAIS PMI Cockpit closes the loop: Isolation Forest + AnomSeer-pattern anomaly de
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements-week1.txt
+# week4 installs the Web UI stack (FastAPI + uvicorn + Jinja2 +
+# cryptography + playwright) on top of week1/week3 (schema + ingestion
+# + KPI snapshot). To stop at the data layer, install requirements-week3.txt
+# instead.
+pip install -r requirements-week4.txt
 
 # generate synthetic PMI cockpit data + ingest sibling Day-1 output
 python -m src.data_gen.generate_synthetic_cockpit

@@ -1,0 +1,16 @@
+# Week 4 — FastAPI Web UI + Vault Pattern + video pipeline active stack
+# Sibling mais-day1-cockpit pattern literal inherit
+# (audited OSS reuse, CVE-clean state preserved)
+
+-r requirements-week3.txt
+
+# Web framework (sibling inherit, audit green)
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+jinja2>=3.1,<4.0
+
+# Vault Pattern (sibling inherit, Fernet AES-128-CBC + HMAC-SHA256)
+cryptography>=46.0.6,<47.0  # CVE-2026-26007 + CVE-2026-34073 fixes included
+
+# Video pipeline (cross-PJ universal SSoT, video-pipeline/README.md § 1 Tech stack)
+playwright>=1.40,<2.0  # Microsoft Apache-2.0, audited
