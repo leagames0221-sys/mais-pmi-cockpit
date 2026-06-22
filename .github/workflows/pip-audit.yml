@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     name: audit requirements-week0 (active stack, fail-on-high)
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     name: audit requirements-week1
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     name: audit requirements-week3
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
