@@ -23,7 +23,7 @@ numpy>=1.26,<3.0
 # torch>=2.0,<3.0
 
 # KPI snapshot tabular
-pandas>=2.2,<3.0
+pandas>=3.0.3,<4.0
 
 # 5-stage hybrid + citation (T1/T2/T3 inherit、 Week 2-3 で active 化、 cross-PJ python-ml-stack template inherit)
 # sentence-transformers>=5.4,<6.0 # Standard Pin (transformers 5.x 互換、 T2 起源)
