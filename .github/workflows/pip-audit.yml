@@ -24,7 +24,7 @@ jobs:
     name: audit requirements-week0 (active stack, fail-on-high)
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install pip-audit
@@ -37,7 +37,7 @@ jobs:
     name: audit requirements-week1
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install pip-audit
@@ -53,7 +53,7 @@ jobs:
     name: audit requirements-week3
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install pip-audit
